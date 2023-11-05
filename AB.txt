@@ -1,0 +1,86 @@
+#!/bin/bash
+
+address_book="address_book.txt"
+
+# Function to insert data into the address book
+insertData() {
+  echo "Enter data to insert (e.g., Name, Phone, Address):"
+  read new_data
+  echo "$new_data" >> "$address_book"
+  echo "Data inserted into the address book."
+}
+
+# Function to delete data from the address book
+deleteData() {
+  echo "Enter the data to delete (e.g., Name, Phone, Address):"
+  read data_to_delete
+  if grep -q "$data_to_delete" "$address_book"; then
+    sed -i "/$data_to_delete/d" "$address_book"
+    echo "Data deleted from the address book."
+  else
+    echo "Data not found in the address book."
+  fi
+}
+
+# Function to modify data in the address book
+modifyData() {
+  echo "Enter the data to modify (e.g., Name, Phone, Address):"
+  read old_data
+  if grep -q "$old_data" "$address_book"; then
+    echo "Enter the new data (e.g., Name, Phone, Address):"
+    read new_data
+    sed -i "s/$old_data/$new_data/g" "$address_book"
+    echo "Data modified in the address book."
+  else
+    echo "Data not found in the address book."
+  fi
+}
+
+# Function to view data in the address book
+viewData() {
+  if [ -e "$address_book" ]; then
+    cat "$address_book"
+  else
+    echo "Address book is empty."
+  fi
+}
+
+while true; do
+  # Display menu
+  echo "Address Book Menu"
+  echo "1) Insert data"
+  echo "2) Delete data"
+  echo "3) Modify data"
+  echo "4) View data"
+  echo "5) Exit"
+
+  # Read user's choice
+  read -p "Enter your choice: " choice
+
+  case "$choice" in
+    1) # Insert data
+      insertData
+      ;;
+
+    2) # Delete data
+      deleteData
+      ;;
+
+    3) # Modify data
+      modifyData
+      ;;
+
+    4) # View data
+      viewData
+      ;;
+
+    5) # Exit
+      echo "Exiting the address book program."
+      exit 0
+      ;;
+
+    *) # Invalid choice
+      echo "Invalid choice. Please select a valid option (1, 2, 3, 4, or 5)."
+      ;;
+  esac
+done
